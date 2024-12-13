@@ -1,0 +1,28 @@
+<html>
+    <body>
+        <script>
+            $.get("../../../Service/getSDGs.ashx?keyword=", function (data) {
+                $("body").SelectItemDialog({
+                    title: "選擇SDGs,至多三項",
+                    width: 1200,
+                    height: 650,
+                    headers: [{ key: 'text', title: '編號', align: 'left' }, { key: 'desc', title: '說明', align: 'left'}],
+                    items: $.extend([], data),
+                    selectLimit: 3,
+                    searchKeyCallBack: function (key) {                        
+                        $.get("../../../Service/getSDGs.ashx?keyword=" + key, function (data) {
+                            $("body").SelectItemDialog("setItems", $.extend([], data));
+                        });                    
+                    },
+                    confirmCallBack: function (data) {                        
+                        alert($.map(data,function(d){return d.id;}));
+                        $("body").SelectItemDialog("closeDialog");
+                    },
+                    closeCallBack: function () {
+                        $("body").SelectItemDialog("closeDialog");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
